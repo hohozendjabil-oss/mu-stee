@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو التصاميم</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ff1493;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: 0.1s;
+            box-shadow: 0 0 20px #ff1493, 0 0 40px #ff1493;
+        }
+
+        .cursor-trail {
+            width: 15px;
+            height: 15px;
+            background: #ff1493;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.7;
+            box-shadow: 0 0 15px #ff1493;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000 100%);
+        }
+
+        .server-name {
+            font-size: 4em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px #ff1493); }
+            50% { filter: drop-shadow(0 0 40px #ff1493); }
+        }
+
+        .tagline {
+            font-size: 1.5em;
+            color: #ccc;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-bottom: 60px;
+            flex-wrap: wrap;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-text h2 {
+            font-size: 2.5em;
+            color: #ff1493;
+            margin-bottom: 20px;
+        }
+
+        .about-text p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.3);
+        }
+
+        /* Works Section */
+        .works-section {
+            padding: 100px 20px;
+            background: #0a0a0a;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3em;
+            color: #ff1493;
+            margin-bottom: 60px;
+        }
+
+        .categories {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .category-btn {
+            background: transparent;
+            border: 2px solid #ff1493;
+            color: #ff1493;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: #ff1493;
+            color: #000;
+            box-shadow: 0 0 30px #ff1493;
+        }
+
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .design-card {
+            background: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .design-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff1493;
+            box-shadow: 0 10px 40px rgba(255, 20, 147, 0.3);
+        }
+
+        .design-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #333, #555);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: #ff1493;
+        }
+
+        .design-info {
+            padding: 20px;
+        }
+
+        .design-info h3 {
+            color: #ff1493;
+            margin-bottom: 10px;
+        }
+
+        .design-info p {
+            color: #aaa;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            border: 2px solid #ff1493;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 2em;
+            color: #ff1493;
+            cursor: pointer;
+        }
+
+        /* Clients Section */
+        .clients-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .client-card {
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #333;
+            transition: all 0.3s;
+        }
+
+        .client-card:hover {
+            border-color: #ff1493;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.2);
+        }
+
+        .client-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .client-name {
+            font-size: 1.3em;
+            color: #ff1493;
+            margin-top: 15px;
+        }
+
+        /* Feedback Section */
+        .feedback-section {
+            padding: 100px 20px;
+            background: #0a0a0a;
+            text-align: center;
+        }
+
+        .feedback-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff1493;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            background: #ff1493;
+            color: #fff;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .submit-btn:hover {
+            background: #ff69b4;
+            box-shadow: 0 0 30px #ff1493;
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: #000;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-trail"></div>
+
+    <!-- Header -->
+    <header>
+        <h1 class="server-name">DESIGN STUDIO</h1>
+        <p class="tagline">نحول أفكارك إلى تصاميم احترافية<br>إبداع لا حدود له</p>
+    </header>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>من نحن</h2>
+                <p>نحن فريق من المصممين المحترفين نقدم أفضل التصاميم الاحترافية لخدمات الديسكورد والسوشيال ميديا. نصمم كل شيء من البانرات والشعارات إلى الثامبنيلات والبوسترات بأعلى جودة ممكنة.</p>
+            </div>
+            <div class="about-image">🎨</div>
+        </div>
+        <div class="about-content" style="flex-direction: row-reverse;">
+            <div class="about-text">
+                <h2>خدماتنا</h2>
+                <p>نقدم مجموعة واسعة من خدمات التصميم تشمل: تصاميم الهيدر، البوسترات، الثامبنيلات، شعارات الأنمي، والمزيد. كل تصميم يتم إنجازه بعناية فائقة لضمان رضاك التام.</p>
+            </div>
+            <div class="about-image">✨</div>
+        </div>
+    </section>
+
+    <!-- Works Section -->
+    <section class="works-section">
+        <h2 class="section-title">أعمالنا</h2>
+        
+        <div class="categories">
+            <button class="category-btn active" onclick="filterDesigns('all')">الكل</button>
+            <button class="category-btn" onclick="filterDesigns('header')">هيدر</button>
+            <button class="category-btn" onclick="filterDesigns('anime')">أنمي</button>
+            <button class="category-btn" onclick="filterDesigns('poster')">بوستات</button>
+            <button class="category-btn" onclick="filterDesigns('thumbnail')">ثامبنيلات</button>
+        </div>
+
+        <div class="designs-grid" id="designsGrid">
+            <div class="design-card" data-category="header" onclick="openModal('تصميم هيدر احترافي', 'header')">
+                <div class="design-image">🎯</div>
+                <div class="design-info">
+                    <h3>تصميم هيدر 1</h3>
+                    <p>تصميم هيدر احترافي للسيرفرات</p>
+                </div>
+            </div>
+            <div class="design-card" data-category="anime" onclick="openModal('تصميم أنمي مميز', 'anime')">
+                <div class="design-image">⚡</div>
+                <div class="design-info">
+                    <h3>تصميم أنمي 1</h3>
+                    <p>شخصيات أنمي بتصميم عصري</p>
+                </div>
+            </div>
+            <div class="design-card" data-category="poster" onclick="openModal('بوستر إعلاني', 'poster')">
+                <div class="design-image">🎬</div>
+                <div class="design-info">
+                    <h3>بوستر إعلاني 1</h3>
+                    <p>تصميم بوستر جذاب ومميز</p>
+                </div>
+            </div>
+            <div class="design-card" data-category="thumbnail" onclick="openModal('ثامبنيل يوتيوب', 'thumbnail')">
+                <div class="design-image">📺</div>
+                <div class="design-info">
+                    <h3>ثامبنيل 1</h3>
+                    <p>ثامبنيل احترافي لليوتيوب</p>
+                </div>
+            </div>
+            <div class="design-card" data-category="header" onclick="openModal('تصميم هيدر متقدم', 'header')">
+                <div class="design-image">🌟</div>
+                <div class="design-info">
+                    <h3>تصميم هيدر 2</h3>
+                    <p>هيدر بتأثيرات مميزة</p>
+                </div>
+            </div>
+            <div class="design-card" data-category="anime" onclick="openModal('لوجو أنمي', 'anime')">
+                <div class="design-image">🎨</div>
+                <div class="design-info">
+                    <h3>لوجو أنمي 1</h3>
+                    <p>لوجو بطابع الأنمي الياباني</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="designModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">×</span>
+            <h2 style="color: #ff1493; margin-bottom: 30px;" id="modalTitle">عنوان التصميم</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div style="background: #333; height: 200px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2em;">🎨</div>
+                <div style="background: #333; height: 200px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2em;">✨</div>
+                <div style="background: #333; height: 200px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2em;">🌟</div>
+                <div style="background: #333; height: 200px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2em;">⚡</div>
+            </div>
+            <p style="margin-top: 30px; color: #aaa; font-size: 1.1em;">هنا يمكنك عرض المزيد من تفاصيل التصميم والصور الإضافية</p>
+        </div>
+    </div>
+
+    <!-- Clients Section -->
+    <section class="clients-section">
+        <h2 class="section-title">عملاؤنا المميزون</h2>
+        <div class="clients-grid">
+            <div class="client-card">
+                <div class="client-logo">A</div>
+                <h3 class="client-name">عميل مميز 1</h3>
+            </div>
+            <div class="client-card">
+                <div class="client-logo">B</div>
+                <h3 class="client-name">عميل مميز 2</h3>
+            </div>
+            <div class="client-card">
+                <div class="client-logo">C</div>
+                <h3 class="client-name">عميل مميز 3</h3>
+            </div>
+            <div class="client-card">
+                <div class="client-logo">D</div>
+                <h3 class="client-name">عميل مميز 4</h3>
+            </div>
+            <div class="client-card">
+                <div class="client-logo">E</div>
+                <h3 class="client-name">عميل مميز 5</h3>
+            </div>
+            <div class="client-card">
+                <div class="client-logo">F</div>
+                <h3 class="client-name">عميل مميز 6</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="feedback-section">
+        <h2 class="section-title">آراء عملائنا</h2>
+        <form class="feedback-form" onsubmit="submitFeedback(event)">
+            <div class="form-group">
+                <input type="text" placeholder="الاسم" required>
+            </div>
+            <div class="form-group">
+                <input type="email" placeholder="البريد الإلكتروني" required>
+            </div>
+            <div class="form-group">
+                <textarea placeholder="اكتب رأيك هنا..." required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">إرسال</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Design Studio. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorTrail = document.querySelector('.cursor-trail');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorTrail.style.left = e.clientX + 'px';
+                cursorTrail.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Filter Designs
+        function filterDesigns(category) {
+            const cards = document.querySelectorAll('.design-card');
+            const buttons = document.querySelectorAll('.category-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Functions
+        function openModal(title, category) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('designModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('designModal').style.display = 'none';
+        }
+
+        // Submit Feedback
+        function submitFeedback(e) {
+            e.preventDefault();
+            alert('شكراً لك! تم إرسال رأيك بنجاح 💖');
+            e.target.reset();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('designModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+          </html>
